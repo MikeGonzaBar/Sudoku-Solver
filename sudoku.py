@@ -17,6 +17,9 @@ class sudoku:
     def create_new_board(self):
         # TODO: Fill in the board with a random sudoku puzzle
         pass
+    def validate_board(self):
+        # TODO: Validate if the board is a valid sudoku puzzle
+        pass
 
     def create_board(self, new_board):
         self.board = new_board

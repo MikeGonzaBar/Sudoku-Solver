@@ -1,7 +1,7 @@
 import itertools
 import tkinter as tk
 from sudoku import sudoku
-
+from tkinter import messagebox
 
 def clear_sudoku():
     for row in entries:
@@ -12,12 +12,15 @@ def clear_sudoku():
 
 
 def solve_sudoku():
-    board = get_entries()
+    try:
+        board = get_entries()
+    except Exception:
+        messagebox.showerror("Error", "Invalid input")
+        return
     sudoku_instance.create_board(board)
     sudoku_instance.solve(board)
     upload_entries(board)
     return
-
 
 def on_entry_change(event):
     entry = event.widget
