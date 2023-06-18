@@ -3,6 +3,7 @@ import tkinter as tk
 from sudoku import sudoku
 from tkinter import messagebox
 
+
 def clear_sudoku():
     for row in entries:
         for entry in row:
@@ -18,9 +19,13 @@ def solve_sudoku():
         messagebox.showerror("Error", "Invalid input")
         return
     sudoku_instance.create_board(board)
+    if not sudoku_instance.is_sudoku_valid(board):
+        messagebox.showerror("Error", "Invalid sudoku")
+        return
     sudoku_instance.solve(board)
     upload_entries(board)
     return
+
 
 def on_entry_change(event):
     entry = event.widget
