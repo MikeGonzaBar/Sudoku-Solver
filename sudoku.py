@@ -1,40 +1,88 @@
+import itertools
+
 class sudoku:
-    def create_board(self):
+
+    board = [
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0]
+    ]
+
+    def create_new_board(self):
         # TODO: Fill in the board with a random sudoku puzzle
-        return [
-            [7, 8, 0, 4, 0, 0, 1, 2, 0],
-            [6, 0, 0, 0, 7, 5, 0, 0, 9],
-            [0, 0, 0, 6, 0, 1, 0, 7, 8],
-            [0, 0, 7, 0, 4, 0, 2, 6, 0],
-            [0, 0, 1, 0, 5, 0, 9, 3, 0],
-            [9, 0, 4, 0, 6, 0, 0, 0, 5],
-            [0, 7, 0, 3, 0, 0, 0, 1, 2],
-            [1, 2, 0, 0, 0, 7, 4, 0, 0],
-            [0, 4, 9, 2, 0, 6, 0, 0, 7]
-        ]
+        pass
 
-    def print_board(self, board):
-        for row in board:
-            print(row)
-        return
+    def create_board(self, new_board):
+        self.board = new_board
+        return self.board
 
-    def solve_board(self, board: list[list[int]]):
-      return
+    def get_board(self):
+        return self.board
 
-    def is_valid_number(self, board: list, row: int, col: int, number: int) -> bool:
-        # Check if the number is in the row or column
-        for i in range(0, 9):
-            if board[row][i] == number:
+    def solve(self, bo):
+        if find := self.find_empty(bo):
+            row, col = find
+
+        else:
+            return True
+        for i in range(1, 10):
+            if self.valid(bo, i, (row, col)):
+                bo[row][col] = i
+
+                if self.solve(bo):
+                    return True
+
+                bo[row][col] = 0
+
+        return False
+
+    def valid(self, bo, num, pos):
+        # Check row
+        for i in range(len(bo[0])):
+            if bo[pos[0]][i] == num and pos[1] != i:
                 return False
-            if board[i][col] == number:
+
+        # Check column
+        for i in range(len(bo)):
+            if bo[i][pos[1]] == num and pos[0] != i:
                 return False
 
-        # Check if the number is in the 3x3 square
-        row_start = (row // 3) * 3
-        col_start = (col // 3) * 3
-        for i in range(3):
-            for j in range(3):
-                if board[row_start + i][col_start + j] == number:
-                    return False
+        # Check box
+        box_x = pos[1] // 3
+        box_y = pos[0] // 3
+        return not any(
+            bo[i][j] == num and (i, j) != pos
+            for i, j in itertools.product(
+                range(box_y * 3, box_y * 3 + 3), range(box_x * 3, box_x * 3 + 3)
+            )
+        )
 
-        return True
+    def print_board(self, bo):
+        for i in range(len(bo)):
+            if i % 3 == 0 and i != 0:
+                print("- - - - - - - - - - - - - ")
+
+            for j in range(len(bo[0])):
+                if j % 3 == 0 and j != 0:
+                    print(" | ", end="")
+
+                if j == 8:
+                    print(bo[i][j])
+                else:
+                    print(f"{str(bo[i][j])} ", end="")
+
+    def find_empty(self, bo):
+        return next(
+            (
+                (i, j)
+                for i, j in itertools.product(range(len(bo)), range(len(bo[0])))
+                if bo[i][j] == 0
+            ),
+            None,
+        )
