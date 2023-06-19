@@ -1,10 +1,17 @@
 import itertools
 import tkinter as tk
-from sudoku import sudoku
 from tkinter import messagebox
 
+from sudoku import sudoku
 
-def clear_sudoku():
+
+def clear_sudoku() -> None:
+    """
+    Clear the Sudoku board by removing all the entries and resetting their background color.
+
+    Returns:
+        None
+    """
     for row in entries:
         for entry in row:
             entry.delete(0, tk.END)
@@ -12,7 +19,13 @@ def clear_sudoku():
     return
 
 
-def solve_sudoku():
+def solve_sudoku() -> None:
+    """
+    Solve the Sudoku puzzle based on the current entries.
+
+    Returns:
+        None
+    """
     try:
         board = get_entries()
     except Exception:
@@ -27,7 +40,16 @@ def solve_sudoku():
     return
 
 
-def on_entry_change(event):
+def on_entry_change(event) -> None:
+    """
+    Handle the event triggered when the content of an entry widget is changed.
+
+    Args:
+        event: The event object associated with the entry widget.
+
+    Returns:
+        None
+    """
     entry = event.widget
     input_text = entry.get()
 
@@ -39,7 +61,14 @@ def on_entry_change(event):
         entry.config(bg="red")
 
 
-def get_entries():
+def get_entries() -> list[list[int]]:
+    """
+    Get the current entries from the Sudoku board.
+
+    Returns:
+        list[list[int]]: A 9x9 Sudoku board represented as a 2-dimensional list of integers.
+            Each integer represents the value in the corresponding cell on the board.
+    """
     result = []
     for row in entries:
         sublist = []
@@ -52,7 +81,17 @@ def get_entries():
     return result
 
 
-def upload_entries(solution):
+def upload_entries(solution) -> None:
+    """
+    Upload the solution to the Sudoku board entries.
+
+    Args:
+        solution (list[list[int]]): A 9x9 Sudoku solution represented as a 2-dimensional list of integers.
+            Each integer represents the value in the corresponding cell on the board.
+
+    Returns:
+        None
+    """
     for i, j in itertools.product(range(9), range(9)):
         if entries[i][j].get() == '':
             entries[i][j].config(bg="light blue")
@@ -61,28 +100,13 @@ def upload_entries(solution):
     return
 
 
-# Create the main window
-sudoku_instance = sudoku()
-window = tk.Tk()
-window.title("Sudoku Solver")
-window.iconbitmap("sudoku.ico")
-window.wm_iconbitmap("sudoku.ico")
-window.configure(bg="white")
+def draw_lines() -> None:
+    """
+    Draw the lines on the Sudoku board.
 
-# Create a title label
-title_label = tk.Label(window, text="Sudoku Solver", activebackground="white", bg="white", fg="black",
-                       font=("Arial", 16, "bold"))
-title_label.pack(pady=10)
-
-# Create a frame for the table
-frame = tk.Frame(window)
-frame.pack(fill="both", expand=True)
-# Create a canvas on top of the grid
-canvas = tk.Canvas(frame, width=1, height=1, bg="white", highlightthickness=0)
-canvas.place(relx=0, rely=0, relwidth=1, relheight=1)
-
-
-def draw_lines():
+    Returns:
+        None
+    """
     canvas.delete("lines")
     width = canvas.winfo_width()
     height = canvas.winfo_height()
@@ -94,7 +118,27 @@ def draw_lines():
     for j in range(1, 3):
         x = j * width / 3
         canvas.create_line(x, 0, x, height, width=2, tags="lines")
+    return
 
+
+# Create the main window
+sudoku_instance = sudoku()
+window = tk.Tk()
+window.title("Sudoku Solver")
+window.configure(bg="white")
+
+# Create a title label
+title_label = tk.Label(window, text="Sudoku Solver", activebackground="white", bg="white", fg="black",
+                       font=("Arial", 16, "bold"))
+title_label.pack(pady=10)
+
+# Create a frame for the table
+frame = tk.Frame(window)
+frame.pack(fill="both", expand=True)
+# Create a canvas on top of the grid
+canvas = tk.Canvas(frame, width=1, height=1,
+                   bg="white", highlightthickness=0)
+canvas.place(relx=0, rely=0, relwidth=1, relheight=1)
 
 # Call draw_lines initially
 draw_lines()
@@ -118,7 +162,6 @@ for i in range(9):
 button_frame = tk.Frame(window, bg="white")
 button_frame.pack()
 
-
 # Create the buttons
 button1 = tk.Button(button_frame, text="Clear",
                     command=clear_sudoku, font=("Arial", 11), background="white")
@@ -132,7 +175,6 @@ button2.grid(row=0, column=1, padx=5, pady=10)
 for i in range(9):
     frame.grid_rowconfigure(i, weight=1)
     frame.grid_columnconfigure(i, weight=1)
-
 
 # Start the main event loop
 window.mainloop()
